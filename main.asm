@@ -3,6 +3,9 @@ DEF rSC = $FF02
 DEF rLCDC = $FF40
 DEF rBGP = $FF47
 DEF ROM_BANK_PORT = $2000
+DEF RAM_ENABLE_PORT = $0000
+DEF RAM_BANK_PORT = $4000
+DEF RAM_ADDR = $A000
 DEF VRAM_ADDR = $8000
 DEF BG_MAP = $9800
 
@@ -37,6 +40,8 @@ TestLoop:
     ld a, b
     cp 0
     jr nz, TestLoop
+    call TestRAMBanks
+    jr c, Failed
     ld hl, SuccessText
     call PrintString
     xor a
@@ -107,6 +112,41 @@ SendSerial:
     ld a, [rSC]
     and $80
     jr nz, .wait
+    ret
+
+; Check the 8 RAM banks available on MBC3O
+; Returns with carry set if any bank check fails
+TestRAMBanks:
+    ld a, $0A
+    ld [RAM_ENABLE_PORT], a ; enable RAM
+    ld b, 0
+.write_loop:
+    ld a, b
+    ld [RAM_BANK_PORT], a ; select bank
+    ld hl, RAM_ADDR
+    ld a, b
+    ld [hl], a
+    inc b
+    ld a, b
+    cp 8
+    jr nz, .write_loop
+
+    ld b, 0
+.read_loop:
+    ld a, b
+    ld [RAM_BANK_PORT], a ; select bank
+    ld hl, RAM_ADDR
+    ld a, [hl]
+    cp b
+    jr nz, .fail
+    inc b
+    ld a, b
+    cp 8
+    jr nz, .read_loop
+    xor a ; clear carry
+    ret
+.fail:
+    scf
     ret
 
 StartText:
