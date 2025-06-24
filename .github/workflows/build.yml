@@ -23,11 +23,15 @@ jobs:
           sudo ./install.sh
       - name: Build ROM
         run: make
-      - name: Upload ROM artifact
+      - name: Compress ROM
+        run: zip mbc3Otest.gb.zip mbc3Otest.gb
+      - name: Upload ROM artifacts
         uses: actions/upload-artifact@v4
         with:
           name: mbc3Otest
-          path: mbc3Otest.gb
+          path: |
+            mbc3Otest.gb
+            mbc3Otest.gb.zip
       - name: Determine if tag is on master
         id: prerelease
         if: github.ref_type == 'tag'
@@ -42,6 +46,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
         with:
-          files: mbc3Otest.gb
+          files: |
+            mbc3Otest.gb
+            mbc3Otest.gb.zip
           generate_release_notes: true
           prerelease: ${{ steps.prerelease.outputs.prerelease }}
