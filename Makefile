@@ -1,4 +1,4 @@
-GBNAME = main
+GBNAME = mbc3Otest
 
 all: $(GBNAME).gb
 
