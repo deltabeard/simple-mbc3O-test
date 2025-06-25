@@ -29,9 +29,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mbc3Otest
-          path: |
-            mbc3Otest.gb
-            mbc3Otest.gb.zip
+          path: mbc3Otest.gb
       - name: Determine if tag is on master
         id: prerelease
         if: github.ref_type == 'tag'
@@ -46,8 +44,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
         with:
-          files: |
-            mbc3Otest.gb
-            mbc3Otest.gb.zip
+          files: mbc3Otest.gb.zip
           generate_release_notes: true
           prerelease: ${{ steps.prerelease.outputs.prerelease }}
