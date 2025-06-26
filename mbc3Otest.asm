@@ -158,8 +158,6 @@ FailText:
 
 ; Tile data for screen messages
 FontData:
-    ; tile 0 - blank
-    db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
     ; tile for A
     db $30,$00,$78,$00,$cc,$00,$cc,$00,$fc,$00,$cc,$00,$cc,$00,$00,$00
     ; tile for C
